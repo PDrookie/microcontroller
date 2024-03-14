@@ -1,0 +1,38 @@
+List p=18f4520
+    #include<p18f4520.inc>
+        CONFIG OSC = INTIO67
+        CONFIG WDT = OFF
+        org 0x100	
+setup:
+    LFSR 0, 0x100
+    LFSR 1, 0x101
+    MOVLW 0x12
+    MOVWF POSTINC1 ; FSR1??0x101 FSR1 = 0x102     
+    MOVLW 0x15
+    MOVWF POSTINC0 ; FSR0??0x100 FSR0 = 0x101
+    
+      
+start:
+    ADDWF INDF0, w
+    MOVWF INDF1
+    SUBFWB INDF0, 0
+    MOVWF PREINC1
+    INCF INDF1, w
+    INCF POSTINC1
+    ADDWF PREINC0, w
+    MOVWF INDF1
+    SUBFWB PREINC0, 0
+    MOVWF PREINC1
+    INCF INDF1, w
+    INCF POSTINC1
+    ADDWF PREINC0, w
+    MOVWF INDF1
+    SUBFWB PREINC0, 0
+    MOVWF PREINC1
+    INCF INDF1, w
+    INCF POSTINC1
+    ADDWF PREINC0, w
+    MOVWF INDF1
+end
+
+

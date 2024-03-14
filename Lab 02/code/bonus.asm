@@ -1,0 +1,88 @@
+List p=18f4520
+    #include<p18f4520.inc>
+        CONFIG OSC = INTIO67
+        CONFIG WDT = OFF
+        org 0x100
+	
+setup:
+    LFSR 0, 0x105
+    MOVLW 0x05
+    MOVWF 0x002
+    MOVWF 0x003
+    MOVWF 0x004
+    MOVLW 0xFF
+    MOVWF POSTDEC0
+    MOVLW 0xF7
+    MOVWF POSTDEC0
+    MOVLW 0x22
+    MOVWF POSTDEC0
+    MOVLW 0x12
+    MOVWF POSTDEC0
+    MOVLW 0x23
+    MOVWF POSTDEC0
+    MOVLW 0x23
+    MOVWF INDF0
+    
+LOOP_LEFT:
+    MOVF POSTINC0, w
+    CPFSGT INDF0
+	GOTO switch_left
+  
+KEEP_left:
+    DCFSNZ 0x002
+	GOTO to_right
+    MOVF INDF0	
+    GOTO LOOP_LEFT
+    
+LOOP_RIGHT:
+    MOVF POSTDEC0, w
+    CPFSLT INDF0
+	GOTO switch_right
+
+KEEP_right:
+    DCFSNZ 0x002
+	GOTO to_left
+    MOVF INDF0	
+    GOTO LOOP_RIGHT
+
+    
+switch_right: 
+    MOVFF INDF0, 0x000
+    MOVWF POSTINC0
+    MOVFF 0x000, POSTDEC0
+    GOTO KEEP_right
+
+    
+switch_left: 
+    MOVFF INDF0, 0x001
+    MOVWF POSTDEC0
+    MOVFF 0x001, POSTINC0
+    GOTO KEEP_left
+  
+to_left:
+    MOVF POSTINC0
+    DECFSZ 0x003
+	MOVFF 0x003, 0x002	
+    MOVF INDF0, w
+    DCFSNZ 0x004
+	GOTO STORE
+    GOTO LOOP_LEFT
+    
+to_right:
+    DECFSZ 0x003
+	MOVFF 0x003, 0x002
+    MOVF POSTDEC0
+    DCFSNZ 0x004
+	GOTO STORE	
+    GOTO LOOP_RIGHT
+       
+STORE:
+    MOVFF 0x100, 0x110
+    MOVFF 0x101, 0x111
+    MOVFF 0x102, 0x112
+    MOVFF 0x103, 0x113
+    MOVFF 0x104, 0x114
+    MOVFF 0x105, 0x115
+end
+    
+

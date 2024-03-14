@@ -1,0 +1,36 @@
+List p=18f4520
+    #include<p18f4520.inc>
+        CONFIG OSC = INTIO67
+        CONFIG WDT = OFF
+        org 0x000
+
+	MOVLW 0x03
+	MOVWF TRISA
+	MOVLW 0x0F
+	MOVWF TRISB
+	MOVWF TRISC
+	
+	MOVLW 0x04
+	MOVWF 0x001
+	
+	MOVF TRISA, w
+	RLNCF WREG
+	RLNCF WREG
+	RLNCF WREG
+	RLNCF WREG	
+	
+	loop:
+	    BCF STATUS, C
+	    BTFSC TRISC, 0
+		ADDWF TRISC
+	    RRCF TRISC
+	    DECF 0x001
+	    BNZ loop
+	NOP    
+	    
+end
+	    
+	
+	
+	
+
